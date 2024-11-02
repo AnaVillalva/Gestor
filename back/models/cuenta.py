@@ -20,3 +20,19 @@ class Cuenta:
             "cuenta": self.cuenta,
             "contraseña": self.contraseña.obtener_contraseña()
         }
+
+# back/models/cuenta.py
+from back import db
+
+class Cuenta(db.Model):
+    __tablename__ = 'cuentas'
+    id = db.Column(db.Integer, primary_key=True)
+    nombre_usuario = db.Column(db.String(80), nullable=False)
+    correo_electronico = db.Column(db.String(120), nullable=False)
+    contraseña = db.Column(db.String(120), nullable=False)
+    carpeta_id = db.Column(db.Integer, db.ForeignKey('carpetas.id'), nullable=False)
+
+    def __init__(self, nombre_usuario, correo_electronico, contraseña):
+        self.nombre_usuario = nombre_usuario
+        self.correo_electronico = correo_electronico
+        self.contraseña = contraseña

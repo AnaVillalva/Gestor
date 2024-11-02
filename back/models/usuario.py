@@ -55,3 +55,22 @@ class Usuario:
         if carpeta:
             return carpeta.eliminar_cuenta(nombre_usuario)
         return False
+
+# back/models/usuario.py
+from back import db
+
+class Usuario(db.Model):
+    __tablename__ = 'usuarios'
+    id = db.Column(db.Integer, primary_key=True)
+    nombre_usuario = db.Column(db.String(80), unique=True, nullable=False)
+    contraseña_maestra = db.Column(db.String(80), nullable=False)
+    carpetas = db.relationship('Carpeta', backref='usuario', lazy=True)
+
+    def __init__(self, nombre_usuario, contraseña_maestra):
+        self.nombre_usuario = nombre_usuario
+        self.contraseña_maestra = contraseña_maestra
+
+    def crear_carpeta(self, nombre_carpeta, tipo):
+        nueva_carpeta = Carpeta(nombre=nombre_carpeta, tipo=tipo, usuario_id=self.id)
+        db.session.add(nueva_carpeta)
+        db.session.commit()

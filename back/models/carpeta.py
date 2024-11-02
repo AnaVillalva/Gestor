@@ -27,3 +27,19 @@ class Carpeta:
     
     def contar_cuentas(self):
         return(len(self.cuentas))
+    
+# back/models/carpeta.py
+from back import db
+
+class Carpeta(db.Model):
+    __tablename__ = 'carpetas'
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(80), nullable=False)
+    tipo = db.Column(db.String(80), nullable=False)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+    cuentas = db.relationship('Cuenta', backref='carpeta', lazy=True)
+
+    def agregar_cuenta(self, cuenta):
+        self.cuentas.append(cuenta)
+        db.session.commit()
+
